@@ -1,1 +1,2 @@
 venv-evolution
+*.ipynb_checkpoints*
