@@ -1,2 +1,5 @@
 venv-evolution
 *.ipynb_checkpoints*
+__pycache__
+.cache
+MNIST_data
