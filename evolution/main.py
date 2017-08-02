@@ -10,6 +10,7 @@ from keras.optimizers import Adam # not important as there's no training here.
 import tensorflow as tf
 from keras import backend as K
 
+start_time = time.time()
 
 # data load
 from tensorflow.examples.tutorials.mnist import input_data
@@ -60,5 +61,26 @@ def get_reward(weights):
     return reward
 
 
+
+prediction = model.predict(x_test)
+print('test set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_test,1))))
+
+
+prediction = model.predict(x_valid)
+print('validation set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_valid,1))))
+
+
 es = EvolutionStrategy(model.get_weights(), get_reward, population_size=50, sigma=0.1, learning_rate=0.001)
 es.run(10, print_step=1)
+es.run_dist(10, print_step=1)
+
+
+prediction = model.predict(x_test)
+print('test set accuracy - POST:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_test,1))))
+
+prediction = model.predict(x_valid)
+print('validation set accuracy - POST:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_valid,1))))
+
+nd_time = time.time()
+print("Total Time usage: " + str(timedelta(seconds=int(round(end_time - start_time)))))
+
