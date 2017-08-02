@@ -1,5 +1,8 @@
 # dependencies
 import numpy as np
+import time
+from datetime import timedelta
+
 
 from keras.models import Model, Input, Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
@@ -17,7 +20,7 @@ config = tf.ConfigProto(intra_op_parallelism_threads=1,
 session = tf.Session(config=config)
 K.set_session(session)
 
-
+start_time = time.time()
 batch_size = 128
 num_classes = 10
 
@@ -129,7 +132,7 @@ print('validation set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,
 
 
 es = EvolutionStrategy(model.get_weights(), get_reward, population_size=50, sigma=0.1, learning_rate=0.001)
-es.run(1000, print_step=10)
+es.run(10000, print_step=100)
 
 prediction = model.predict(x_test)
 solution = y_test
@@ -139,3 +142,7 @@ print('test set accuracy - POST:', np.mean(np.equal(np.argmax(prediction,1), np.
 prediction = model.predict(x_valid)
 solution = y_valid
 print('validation set accuracy - POST:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(solution,1))))
+
+end_time = time.time()
+print("Total Time usage: " + str(timedelta(seconds=int(round(end_time - start_time)))))
+
