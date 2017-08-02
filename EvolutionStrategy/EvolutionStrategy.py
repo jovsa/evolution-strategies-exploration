@@ -11,7 +11,9 @@ from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("../MNIST_data/", one_hot=True)
 
 
-config = tf.ConfigProto(intra_op_parallelism_threads=2, inter_op_parallelism_threads=2, allow_soft_placement=True, device_count = {'CPU': 1})
+config = tf.ConfigProto(intra_op_parallelism_threads=1, 
+                        inter_op_parallelism_threads=1, 
+                        allow_soft_placement=True, device_count = {'CPU': 1, 'GPU':0})
 session = tf.Session(config=config)
 K.set_session(session)
 
@@ -38,11 +40,19 @@ print('y_train:', np.shape(y_train))
 print('y_valid:', np.shape(y_valid))
 print('y_test:', np.shape(y_test))
 
+
+
+#model = Sequential()
+#model.add(Dense(784, input_shape=(784,)))
+#model.add(Dense(num_classes, activation='softmax'))
+#model.compile(optimizer= Adam(), loss='mse')
+
 input_layer = Input(shape=(784,))
-layer = Dense(1500)(input_layer)
-output_layer = Dense(num_classes, activation='softmax')(layer)
+layer_1 = Dense(784)(input_layer)
+output_layer = Dense(num_classes, activation='softmax')(layer_1)
 model = Model(input_layer, output_layer)
 model.compile(Adam(), 'mse', metrics=['accuracy'])
+
 
 
 class EvolutionStrategy(object):
@@ -118,9 +128,8 @@ print('validation set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,
 
 
 
-es = EvolutionStrategy(model.get_weights(), get_reward, population_size=50, sigma=0.1, learning_rate=0.01)
-es.run(20, print_step=1)
-
+es = EvolutionStrategy(model.get_weights(), get_reward, population_size=50, sigma=0.1, learning_rate=0.001)
+es.run(1000, print_step=10)
 
 prediction = model.predict(x_test)
 solution = y_test
