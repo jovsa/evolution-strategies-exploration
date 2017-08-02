@@ -1,3 +1,4 @@
+.DS_Store
 venv-evolution
 *.ipynb_checkpoints*
 __pycache__
