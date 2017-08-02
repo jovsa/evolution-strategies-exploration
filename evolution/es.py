@@ -22,8 +22,7 @@ class EvolutionStrategy(object):
 
     def get_weights(self):
         return self.weights
-
-
+    
     def run(self, iterations, print_step=10):
         for iteration in range(iterations):
 
@@ -43,7 +42,44 @@ class EvolutionStrategy(object):
                 rewards[i]  = self.get_reward(weights_try)
 
             rewards = (rewards - np.mean(rewards)) / np.std(rewards)
+                                 
+            for index, w in enumerate(self.weights):
+                A = np.array([p[index] for p in population])
+                self.weights[index] = w + self.LEARNING_RATE/(self.POPULATION_SIZE*self.SIGMA) * np.dot(A.T, rewards).T
+    
+    def worker(self):
+        population = []     
+        rewards = np.zeros(self.POPULATION_SIZE)
+            
+        for i in range(self.POPULATION_SIZE):
+            x = []
+            for w in self.weights:
+                x.append(np.random.randn(*w.shape))
+            population.append(x)
+                  
+        for i in range(self.POPULATION_SIZE):
+            weights_try = self._get_weights_try(self.weights, population[i])
+            rewards[i]  = self.get_reward(weights_try)
 
+        rewards = (rewards - np.mean(rewards)) / np.std(rewards)
+        return population, rewards 
+    
+    def run_dist(self, iterations, print_step=10, num_workers=1):
+        for iteration in range(iterations):
+            
+            if iteration % print_step == 0:
+                print('iter %d. reward: %f' % (iteration, self.get_reward(self.weights)))
+            
+#            for i in range(num_workers):
+#                p = multiprocess.Process(target=self.worker, ar)
+#                
+#                
+#                p1 = multiprocessing.Process(target=calc_square, args=(arr, temp))
+            
+            population, rewards = self.worker()
+            
+            #print('sum of reward', np.sum(rewards))
+            
             for index, w in enumerate(self.weights):
                 A = np.array([p[index] for p in population])
                 self.weights[index] = w + self.LEARNING_RATE/(self.POPULATION_SIZE*self.SIGMA) * np.dot(A.T, rewards).T
