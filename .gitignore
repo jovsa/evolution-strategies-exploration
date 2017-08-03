@@ -4,3 +4,4 @@ venv-evolution
 __pycache__
 .cache
 MNIST_data
+run_summaries
