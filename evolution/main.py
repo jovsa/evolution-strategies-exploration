@@ -56,9 +56,10 @@ def get_reward(weights):
 
     model.set_weights(weights)
     prediction = model.predict(inp)
+   
 
     reward = -np.sum(np.square(solution - prediction))
-    return reward
+    return reward, acuracy
 
 
 
@@ -70,8 +71,16 @@ prediction = model.predict(x_valid)
 print('validation set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_valid,1))))
 
 
-es = EvolutionStrategy(model.get_weights(), get_reward, population_size=50, sigma=0.1, learning_rate=0.001)
-es.run(100, print_step=10)
+
+chosen_population_size = 50
+chosen_sigma = 0.1
+chosen_learning_rate = 0.001
+tensorboard_summaries = '../tensorboard_summaries/
+es = EvolutionStrategy(model.get_weights(), get_reward, population_size=chosen_population_size, 
+                       sigma=chosen_sigma, 
+                       learning_rate=chosen_learning_rate,
+                       tensorboard = tensorboard_summaries)
+es.run(300, print_step=50)
 #es.run_dist(100, print_step=10, num_workers=4)
 
 

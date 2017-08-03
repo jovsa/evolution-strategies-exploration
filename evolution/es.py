@@ -2,17 +2,19 @@
 import numpy as np
 import threading
 from collections import deque
+import tensorflow as tf
 
 
 class EvolutionStrategy(object):
 
-    def __init__(self, model_weights, reward_func, population_size, sigma, learning_rate):
+    def __init__(self, model_weights, reward_func, population_size, sigma, learning_rate, tensorboard):
         np.random.seed(0)
         self.weights = model_weights
         self.get_reward = reward_func
         self.POPULATION_SIZE = population_size
         self.SIGMA = sigma
         self.LEARNING_RATE = learning_rate
+        self.TENSORBOARD = tensorboard
 
     def get_model_weights(self, w, p):
         weights_try = []
