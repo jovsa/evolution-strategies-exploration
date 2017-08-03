@@ -71,8 +71,8 @@ print('validation set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,
 
 
 es = EvolutionStrategy(model.get_weights(), get_reward, population_size=50, sigma=0.1, learning_rate=0.001)
-es.run(10, print_step=1)
-es.run_dist(10, print_step=1)
+es.run(1000, print_step=50)
+#es.run_dist(300, print_step=1, num_workers=4)
 
 
 prediction = model.predict(x_test)
@@ -81,6 +81,6 @@ print('test set accuracy - POST:', np.mean(np.equal(np.argmax(prediction,1), np.
 prediction = model.predict(x_valid)
 print('validation set accuracy - POST:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_valid,1))))
 
-nd_time = time.time()
+end_time = time.time()
 print("Total Time usage: " + str(timedelta(seconds=int(round(end_time - start_time)))))
 
