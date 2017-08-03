@@ -71,8 +71,8 @@ print('validation set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,
 
 
 es = EvolutionStrategy(model.get_weights(), get_reward, population_size=50, sigma=0.1, learning_rate=0.001)
-#es.run(10, print_step=1)
-es.run_dist(10, print_step=1, num_workers=3)
+es.run(1000, print_step=50)
+#es.run_dist(300, print_step=1, num_workers=4)
 
 
 prediction = model.predict(x_test)

@@ -70,7 +70,7 @@ class EvolutionStrategy(object):
  
     
     def run_dist(self, iterations, print_step=10, num_workers=1):
-        for iteration in range(iterations):
+        for iteration in range(iterations//num_workers):
             
             if iteration % print_step == 0:
                 print('iter %d. reward: %f' % (iteration, self.get_reward(self.weights)))
@@ -88,15 +88,16 @@ class EvolutionStrategy(object):
             for job in jobs:
                 job.join()
                 
-            
+            population = []
+            rewards = []
             #print('work done')
             for worker_output in return_queue:
-                population = worker_output[0]
-                rewards = worker_output[1]
+                population.extend(worker_output[0])
+                rewards.extend(worker_output[1])
                 
-                for index, w in enumerate(self.weights):
-                    A = np.array([p[index] for p in population])
-                    self.weights[index] = w + self.LEARNING_RATE/(self.POPULATION_SIZE*self.SIGMA) * np.dot(A.T, rewards).T
+            for index, w in enumerate(self.weights):
+                A = np.array([p[index] for p in population])
+                self.weights[index] = w + self.LEARNING_RATE/(self.POPULATION_SIZE*self.SIGMA) * np.dot(A.T, rewards).T
             
             #print('population', len(population))
             #print('rewards', len(rewards))
