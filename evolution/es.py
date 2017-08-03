@@ -51,7 +51,7 @@ class EvolutionStrategy(object):
                 self.weights[index] = w + self.LEARNING_RATE/(self.POPULATION_SIZE*self.SIGMA) * np.dot(A.T, rewards).T
     
     def worker(self, worker_name, return_queue):
-        print('worker:',  worker_name)
+        #print('worker:',  worker_name)
         population = []     
         rewards = np.zeros(self.POPULATION_SIZE)
             
@@ -77,19 +77,17 @@ class EvolutionStrategy(object):
             
             
             return_queue = deque()
+            jobs = []
             
-            #for worker in num_workers:
-            t1= threading.Thread(target=self.worker, args=(str(1), return_queue))
-            t2= threading.Thread(target=self.worker, args=(str(2), return_queue))
-            t3= threading.Thread(target=self.worker, args=(str(3), return_queue))
-            
-            t1.start()
-            t2.start()
-            t3.start()
-            
-            t1.join()
-            t2.join()
-            t3.join()
+            for worker in range(0, num_workers):
+                job= threading.Thread(target=self.worker, args=(str(worker), return_queue))
+                jobs.append(job)
+                job.start()
+                
+
+            for job in jobs:
+                job.join()
+                
             
             #print('work done')
             for worker_output in return_queue:
