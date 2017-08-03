@@ -33,11 +33,11 @@ input_shape = (img_rows, img_cols, 1)
 
 
 x_train = mnist.train.images
-x_valid = mnist.validation.images
+x_val = mnist.validation.images
 x_test = mnist.test.images
 
 y_train = mnist.train.labels
-y_valid = mnist.validation.labels
+y_val = mnist.validation.labels
 y_test = mnist.test.labels
 
 
@@ -49,46 +49,36 @@ model = Model(input_layer, output_layer)
 model.compile(Adam(), 'mse', metrics=['accuracy'])
 
 
-def get_reward(weights):
+def get_reward(weights, calc_metrics = False):
     start_index = np.random.choice(y_train.shape[0]-batch_size-1,1)[0]
     solution = y_train[start_index:start_index+batch_size]
     inp = x_train[start_index:start_index+batch_size]
 
     model.set_weights(weights)
     prediction = model.predict(inp)
-   
-
+    
+    metrics = {}
+    if calc_metrics:
+        metrics['accuracy_test'] = np.mean(np.equal(np.argmax(model.predict(x_test),1), np.argmax(y_test,1)))
+        metrics['accuracy_val'] = np.mean(np.equal(np.argmax(model.predict(x_val),1), np.argmax(y_val,1)))
+        metrics['accuracy_train'] = np.mean(np.equal(np.argmax(model.predict(inp),1), np.argmax(solution,1)))
+       
     reward = -np.sum(np.square(solution - prediction))
-    return reward, acuracy
-
-
-
-prediction = model.predict(x_test)
-print('test set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_test,1))))
-
-
-prediction = model.predict(x_valid)
-print('validation set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_valid,1))))
+    return reward, metrics
 
 
 
 chosen_population_size = 50
 chosen_sigma = 0.1
 chosen_learning_rate = 0.001
-tensorboard_summaries = '../tensorboard_summaries/
+tensorboard_summaries = '../tensorboard_summaries/'
 es = EvolutionStrategy(model.get_weights(), get_reward, population_size=chosen_population_size, 
                        sigma=chosen_sigma, 
                        learning_rate=chosen_learning_rate,
-                       tensorboard = tensorboard_summaries)
+                       tensorboard_loc = tensorboard_summaries)
 es.run(300, print_step=50)
 #es.run_dist(100, print_step=10, num_workers=4)
 
-
-prediction = model.predict(x_test)
-print('test set accuracy - POST:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_test,1))))
-
-prediction = model.predict(x_valid)
-print('validation set accuracy - POST:', np.mean(np.equal(np.argmax(prediction,1), np.argmax(y_valid,1))))
 
 end_time = time.time()
 print("Total Time usage: " + str(timedelta(seconds=int(round(end_time - start_time)))))

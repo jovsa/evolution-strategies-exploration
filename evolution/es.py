@@ -7,14 +7,14 @@ import tensorflow as tf
 
 class EvolutionStrategy(object):
 
-    def __init__(self, model_weights, reward_func, population_size, sigma, learning_rate, tensorboard):
+    def __init__(self, model_weights, reward_func, population_size, sigma, learning_rate, tensorboard_loc):
         np.random.seed(0)
         self.weights = model_weights
         self.get_reward = reward_func
         self.POPULATION_SIZE = population_size
         self.SIGMA = sigma
         self.LEARNING_RATE = learning_rate
-        self.TENSORBOARD = tensorboard
+        self.TENSORBOARD = tensorboard_loc
 
     def get_model_weights(self, w, p):
         weights_try = []
@@ -27,7 +27,8 @@ class EvolutionStrategy(object):
         for iteration in range(iterations):
 
             if iteration % print_step == 0:
-                print('iteration(%d) -> reward: %f' % (iteration, self.get_reward(self.weights)))
+                _, metrics = self.get_reward(self.weights, calc_metrics=True)
+                print('iteration({}) -> reward: {}'.format(iteration, metrics))
 
             population = []
             rewards = np.zeros(self.POPULATION_SIZE)
@@ -39,7 +40,7 @@ class EvolutionStrategy(object):
 
             for i in range(self.POPULATION_SIZE):
                 weights_try = self.get_model_weights(self.weights, population[i])
-                rewards[i]  = self.get_reward(weights_try)
+                rewards[i], _  = self.get_reward(weights_try)
 
             rewards = (rewards - np.mean(rewards)) / np.std(rewards)
                                  
@@ -59,7 +60,7 @@ class EvolutionStrategy(object):
                   
         for i in range(self.POPULATION_SIZE):
             weights_try = self.get_model_weights(self.weights, population[i])
-            rewards[i]  = self.get_reward(weights_try)
+            rewards[i], _  = self.get_reward(weights_try)
 
         rewards = (rewards - np.mean(rewards)) / np.std(rewards)
         return_queue.append([population, rewards])
@@ -69,7 +70,8 @@ class EvolutionStrategy(object):
         for iteration in range(iterations//num_workers):
             
             if iteration % print_step == 0:
-                print('iteration_dist(%d) -> reward: %f' % (iteration, self.get_reward(self.weights)))
+                _, metrics = self.get_reward(self.weights, calc_metrics=True)
+                print('iteration({}) -> reward: {}'.format(iteration, metrics ))
                         
             return_queue = deque()
             jobs = []
