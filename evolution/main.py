@@ -1,7 +1,9 @@
 # dependencies
+import os
 import numpy as np
 import time
 from datetime import timedelta
+import pandas as pd
 from es import EvolutionStrategy
 
 from keras.models import Model, Input, Sequential
@@ -67,19 +69,61 @@ def get_reward(weights, calc_metrics = False):
     return reward, metrics
 
 
+runs = {}
+start_run = 1 # pick tot_runs > 0 if doing hyperparam search else 0
+tot_runs = 100 # pick tot_runs > 1 if doing hyperparam search else 1
+for i in range(start_run, tot_runs):
+    npop = np.random.random_integers(1, 500, 1)[0]
+    
+    sample = np.random.rand(np.maximum(0,npop))
+    sample_std = np.std(sample)
+    sigma = np.round(np.sqrt(np.random.chisquare(sample_std,1)),2)[0]
+    
+    learning_rate_selection = [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
+    alpha = np.random.choice(learning_rate_selection)
+    
+    hyperparams = [npop, sigma, alpha]
+            
+    chosen_before = False
+    for key in runs.keys():
+        if runs[key] == hyperparams:
+            chosen_before = True
+            
+            print('skipping run, as hyperparams [{}] have been chosen before'.format(hyperparams))
 
-chosen_population_size = 50
-chosen_sigma = 0.1
-chosen_learning_rate = 0.001
-tensorboard_summaries = '../tensorboard_summaries/'
-es = EvolutionStrategy(model.get_weights(), get_reward, population_size=chosen_population_size, 
-                       sigma=chosen_sigma, 
-                       learning_rate=chosen_learning_rate,
-                       tensorboard_loc = tensorboard_summaries)
-es.run(300, print_step=50)
-#es.run_dist(100, print_step=10, num_workers=4)
+    if not chosen_before:
+        runs[i] = hyperparams        
+        
+        #default
+        if i ==0:
+            npop = 50
+            sigma = 0.1
+            alpha = 0.001
+        print('hyperparam chosen npop:{}  sigma:{} alpha:{}'.format(npop, sigma, alpha))
+
+        es = EvolutionStrategy(model.get_weights(), get_reward, population_size=npop, 
+                               sigma=sigma, 
+                               learning_rate=alpha)
 
 
+
+        num_iterations = 1000 # for hyperparm search = 1000
+        print_steps = 10 #for hyperparm search = 10
+        num_workers = 1
+        metrics = es.run(num_iterations, print_steps)
+        #es.run_dist(num_iterations, print_steps, num_workers)
+
+        print('saving results')
+        results = pd.DataFrame(np.array(metrics).reshape(int((num_iterations//print_steps)), 6), 
+                               columns=list(['run_name', 'iteration',
+                                             'timestamp',
+                                             'accuracy_test',
+                                             'accuracy_val', 
+                                             'accuracy_train']))
+        RUN_SUMMARY_LOC = '../run_summaries/hyperparam_search'
+        filename = os.path.join(RUN_SUMMARY_LOC, results['run_name'][0] + '.csv')
+        print('writing results to disk')
+        results.to_csv(filename, sep=',')
+                
 end_time = time.time()
 print("Total Time usage: " + str(timedelta(seconds=int(round(end_time - start_time)))))
-
