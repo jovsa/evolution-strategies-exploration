@@ -32,40 +32,21 @@ img_rows, img_cols = 28, 28
 input_shape = (img_rows, img_cols, 1)
 
 
-#x_train = mnist.train.images
-#x_valid = mnist.validation.images
-#x_test = mnist.test.images
-
-
-x_train = mnist.train.images.reshape(-1, img_rows, img_cols, 1)
-x_valid = mnist.validation.images.reshape(-1, img_rows, img_cols, 1)
-x_test = mnist.test.images.reshape(-1, img_rows, img_cols, 1)
+x_train = mnist.train.images
+x_valid = mnist.validation.images
+x_test = mnist.test.images
 
 y_train = mnist.train.labels
 y_valid = mnist.validation.labels
 y_test = mnist.test.labels
 
-model = Sequential()
-model.add(Conv2D(32, kernel_size=(3, 3),
-                  activation='relu',
-                  input_shape=input_shape))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(num_classes, activation='softmax'))
-model.compile(optimizer= Adam(), loss='mse')
 
-
-
-# # NN model definition
-# input_layer = Input(shape=(784,))
-# layer_1 = Dense(784)(input_layer)
-# output_layer = Dense(num_classes, activation='softmax')(layer_1)
-# model = Model(input_layer, output_layer)
-# model.compile(Adam(), 'mse', metrics=['accuracy'])
+# NN model definition
+input_layer = Input(shape=(784,))
+layer_1 = Dense(784)(input_layer)
+output_layer = Dense(num_classes, activation='softmax')(layer_1)
+model = Model(input_layer, output_layer)
+model.compile(Adam(), 'mse', metrics=['accuracy'])
 
 
 def get_reward(weights):
@@ -90,8 +71,8 @@ print('validation set accuracy - PRIOR:', np.mean(np.equal(np.argmax(prediction,
 
 
 es = EvolutionStrategy(model.get_weights(), get_reward, population_size=50, sigma=0.1, learning_rate=0.001)
-es.run(10, print_step=1)
-#es.run_dist(300, print_step=1, num_workers=4)
+es.run(100, print_step=10)
+#es.run_dist(100, print_step=10, num_workers=4)
 
 
 prediction = model.predict(x_test)
