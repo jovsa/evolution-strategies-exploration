@@ -70,8 +70,8 @@ def get_reward(weights, calc_metrics = False):
 
 
 runs = {}
-start_run = 5 # pick tot_runs > 0 if doing hyperparam search else 0
-tot_runs = 100 # pick tot_runs > 1 if doing hyperparam search else 1
+start_run = 0 # pick tot_runs > 0 if doing hyperparam search else 0
+tot_runs = 1 # pick tot_runs > 1 if doing hyperparam search else 1
 for i in range(start_run, tot_runs):
     npop = np.random.random_integers(1, 150, 1)[0]
     
@@ -107,7 +107,7 @@ for i in range(start_run, tot_runs):
 
 
 
-        num_iterations = 1000 # for hyperparm search = 1000
+        num_iterations = 5000 # for hyperparm search = 1000
         print_steps = 10 #for hyperparm search = 10
         num_workers = 1
         metrics = es.run(num_iterations, print_steps)
@@ -120,7 +120,7 @@ for i in range(start_run, tot_runs):
                                              'accuracy_test',
                                              'accuracy_val', 
                                              'accuracy_train']))
-        RUN_SUMMARY_LOC = '../run_summaries/hyperparam_search'
+        RUN_SUMMARY_LOC = '../run_summaries/'
         filename = os.path.join(RUN_SUMMARY_LOC, results['run_name'][0] + '.csv')
         print('writing results to disk')
         results.to_csv(filename, sep=',')
