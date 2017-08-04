@@ -20,11 +20,11 @@ Accompanying write-up can be found on my [medium post](https://medium.com/@jovan
 |   ├── es.py				# implimentation of ES class  
 |   └── main.py			# main file to execute   
 ├── notebooks/
-|   ├── Analyzing Results of Best Hyperparameter.ipynb			# analyzing best parameter results  
-|   ├── Analyzing Results of Hyperparameter Search.ipynb		# post analysis for hyperparameter tuning  
-|   ├── Analyzing Times of Runs by Number of Workers.ipynb	# post analysis of runtimes  
+|   ├── Analyzing Results of Best Hyperparameter.ipynb		 # analyzing best parameter results  
+|   ├── Analyzing Results of Hyperparameter Search.ipynb	 # post analysis for hyperparameter tuning  
+|   ├── Analyzing Times of Runs by Number of Workers.ipynb # post analysis of runtimes  
 |   ├── MNIST - Keras.ipynb		 # MNIST keras models  
-|   └── bare bones implementation of NES - karpathy.ipynb		# karpathy ES starter  
+|   └── bare bones implementation of NES - karpathy.ipynb	 # karpathy ES starter  
 |── .gitignore
 |── .README.md
 └── requirements.txt   # list of packages used
