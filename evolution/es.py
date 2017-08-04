@@ -3,9 +3,8 @@ import numpy as np
 import threading
 import time
 from collections import deque
-import tensorflow as tf
 
-
+# main class for implimenting ES
 class EvolutionStrategy(object):
 
     def __init__(self, model_weights, reward_func, population_size, sigma, learning_rate):
@@ -23,6 +22,7 @@ class EvolutionStrategy(object):
             weights_try.append(w[index] + jittered)
         return weights_try
     
+    # implimention of Algorithm 1: Evolution Strategies by Salimans et al, OpenAI [1], p.2/12
     def run(self, iterations, print_step=10):
         metrics = []
         run_name = ('npop={0:}_sigma={1:}_alpha={2:}_iters={3:}_type={4:}').format(self.POPULATION_SIZE ,
@@ -32,6 +32,8 @@ class EvolutionStrategy(object):
                                                                                    'run')
         
         for iteration in range(iterations):
+            
+            # checking fitness
             if iteration % print_step == 0:
                 _, return_metrics = self.get_reward(self.weights, calc_metrics=True)                  
                 print('iteration({}) -> reward: {}'.format(iteration, return_metrics))
@@ -76,7 +78,7 @@ class EvolutionStrategy(object):
         rewards = (rewards - np.mean(rewards)) / np.std(rewards)
         return_queue.append([population, rewards])
  
-    
+    # Algorithm 2: Parallelized Evolution Strategies by Salimans et al, OpenAI [1], p.3/12
     def run_dist(self, iterations, print_step=10, num_workers=1):
         metrics = []
         run_name = ('npop={0:}_sigma={1:}_alpha={2:}_iters={3:}_type={4:}').format(self.POPULATION_SIZE ,
@@ -86,6 +88,7 @@ class EvolutionStrategy(object):
                                                                                    'run_dist')
         for iteration in range(iterations//num_workers):
             
+            # checking fitness
             if iteration % print_step == 0:
                 _, return_metrics = self.get_reward(self.weights, calc_metrics=True)                  
                 print('iteration({}) -> reward: {}'.format(iteration, return_metrics))
