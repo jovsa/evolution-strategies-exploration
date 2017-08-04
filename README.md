@@ -2,7 +2,7 @@
 
 
 
-Accompanying write-up can be found on a [medium post](https://medium.com/@jovansardinha/an-exploration-into-evolution-strategies-97c42122c486)
+Accompanying write-up can be found on my [medium post](https://medium.com/@jovansardinha/an-exploration-into-evolution-strategies-97c42122c486)
 
 **objectives**:  
 1 — Implement evolution strategies from scratch and use it to optimize the weights of a neural network on the task of MNIST digit recognition.  
@@ -15,16 +15,16 @@ Accompanying write-up can be found on a [medium post](https://medium.com/@jovans
 ```
 .
 ├── evolution/
-|   ├── tests/                                              # contains all test  
+|   ├── tests/                                              # contains all test    
 |   ├── __inti__.py									
-|   ├── es.py				                                        # implimentation of ES class
-|   └── main.py			                                        # main file to execute 
+|   ├── es.py				                                        # implimentation of ES class  
+|   └── main.py			                                        # main file to execute   
 ├── notebooks/
-|   ├── Analyzing Results of Best Hyperparameter.ipynb			# analyzing best parameter results
-|   ├── Analyzing Results of Hyperparameter Search.ipynb		# post analysis for hyperparameter tuning
-|   ├── Analyzing Times of Runs by Number of Workers.ipynb	# post analysis of runtimes
-|   ├── MNIST - Keras.ipynb										              # MNIST keras models
-|   └── bare bones implementation of NES - karpathy.ipynb		# karpathy ES starter
+|   ├── Analyzing Results of Best Hyperparameter.ipynb			# analyzing best parameter results  
+|   ├── Analyzing Results of Hyperparameter Search.ipynb		# post analysis for hyperparameter tuning  
+|   ├── Analyzing Times of Runs by Number of Workers.ipynb	# post analysis of runtimes  
+|   ├── MNIST - Keras.ipynb										              # MNIST keras models  
+|   └── bare bones implementation of NES - karpathy.ipynb		# karpathy ES starter  
 |── .gitignore
 |── .README.md
 └── requirements.txt											                  # list of packages used
