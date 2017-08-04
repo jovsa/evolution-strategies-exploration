@@ -15,23 +15,23 @@ Accompanying write-up can be found on a [medium post](https://medium.com/@jovans
 ```
 .
 ├── evolution/
-|   ├── tests/													# contains all test
+|   ├── tests/                                              # contains all test  
 |   ├── __inti__.py									
-|   ├── es.py													# implimentation of ES class
-|   └── main.py													# file to execute 
+|   ├── es.py				                                        # implimentation of ES class
+|   └── main.py			                                        # main file to execute 
 ├── notebooks/
 |   ├── Analyzing Results of Best Hyperparameter.ipynb			# analyzing best parameter results
 |   ├── Analyzing Results of Hyperparameter Search.ipynb		# post analysis for hyperparameter tuning
-|   ├── Analyzing Times of Runs by Number of Workers.ipynb		# post analysis of runtimes
-|   ├── MNIST - Keras.ipynb										# MNIST keras models
+|   ├── Analyzing Times of Runs by Number of Workers.ipynb	# post analysis of runtimes
+|   ├── MNIST - Keras.ipynb										              # MNIST keras models
 |   └── bare bones implementation of NES - karpathy.ipynb		# karpathy ES starter
 |── .gitignore
 |── .README.md
-└── requirements.txt											# list of packages used
+└── requirements.txt											                  # list of packages used
 ```
 
 
-**Built on**:  
+**Built and tested on**:  
 operating system: Ubuntu 16.04.2 LTS  
 python version: 3.5.2  
 pip version: 9.0.1
