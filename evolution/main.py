@@ -70,10 +70,10 @@ def get_reward(weights, calc_metrics = False):
 
 
 runs = {}
-start_run = 1 # pick tot_runs > 0 if doing hyperparam search else 0
+start_run = 5 # pick tot_runs > 0 if doing hyperparam search else 0
 tot_runs = 100 # pick tot_runs > 1 if doing hyperparam search else 1
 for i in range(start_run, tot_runs):
-    npop = np.random.random_integers(1, 200, 1)[0]
+    npop = np.random.random_integers(1, 150, 1)[0]
     
     sample = np.random.rand(np.maximum(0,npop))
     sample_std = np.std(sample)
