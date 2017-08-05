@@ -126,18 +126,22 @@ def run(start_run, tot_runs, num_iterations, print_steps, output_results, num_wo
 
     print("Total Time usage: " + str(timedelta(seconds=int(round(time.time() - start_time)))))
 
-# ================================================================
-# Function calls
-# ================================================================
-# TODO: Impliment functionality to pass the params via terminal and/or read from config file 
+    
+    
+    
+if __name__ == '__main__':   
+ # TODO: Impliment functionality to pass the params via terminal and/or read from config file 
+   
+ ## single thread run
+ run(start_run=0, tot_runs=1, num_iterations=100, print_steps=10, 
+     output_results=False, num_workers=1)
 
-# single thread run
-run(start_run=0, tot_runs=1, num_iterations=100, print_steps=10, output_results=False, num_workers=1)
+ ### multi worker run
+ #run(start_run=0, tot_runs=1, num_iterations=10, print_steps=1, 
+ #    output_results=False, num_workers=4)
 
-## multi worker run
-#run(start_run=0, tot_runs=1, num_iterations=10, print_steps=1, output_results=False, num_workers=4)
-
-## hyperparam search 
-#run(start_run=1, tot_runs=100, num_iterations=10000, print_steps=10, output_results=True, num_workers=1)
+ ### hyperparam search 
+ #run(start_run=1, tot_runs=100, num_iterations=10000, print_steps=10, 
+ #    output_results=True, num_workers=1)
 
 
